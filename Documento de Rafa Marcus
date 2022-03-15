@@ -1,0 +1,92 @@
+import random
+import os
+
+# número de versões
+Numver = 10
+
+# Dados da prova. Esses dados podem ser obtidos por meio de um arquivo
+# As chaves são os estados e os valores são as capitais.
+capitals = {'Acre':					'Rio Branco',
+            'Alagoas':				'Maceió',
+            'Amapá':				'Macapá',
+            'Amazonas':				'Manaus',
+            'Bahia':				'Salvador',
+            'Ceará':				'Fortaleza',
+            'Distrito Federal':		'Brasília',
+            'Espírito Santo':		'Vitória',
+            'Goiás':				'Goiânia',
+            'Maranhão':				'São Luís',
+            'Mato Grosso':			'Cuiabá',
+            'Mato Grosso do Sul':	'Campo Grande',
+            'Minas Gerais':			'Belo Horizonte',
+            'Pará':					'Belém',
+            'Paraíba':				'João Pessoa',
+            'Paraná':				'Curitiba',
+            'Pernambuco':			'Recife',
+            'Piauí':				'Teresina',
+            'Rio de Janeiro':		'Rio de Janeiro',
+            'Rio Grande do Norte':	'Natal',
+            'Rio Grande do Sul':	'Porto Alegre',
+            'Rondônia':				'Porto Velho',
+            'Roraima':				'Boa Vista',
+            'Santa Catarina':		'Florianópolis',
+            'São Paulo':			'São Paulo',
+            'Sergipe':				'Aracaju',
+            'Tocantins':			'Palmas'}
+
+
+NumProva = 0
+Prova = ()
+# Gera os aquivos das provas.
+for provaNum in range(1,5):
+    # Cria um arquivo para a prova e outro para suas respostas.
+    NumProva = NumProva + 1
+    Prova = 'Prova - ' + str(Prova) + '.txt'
+    ProvaAluno = open(os.path.join('C:\\Users\\Sulivan\\Gerador_de_provas\\Provas', Prova), 'w')
+    Prova = 'Gabarito - ' + str(Prova) + '.txt'
+    GabaritoProva = open(os.path.join('C:\\Users\\Sulivan\\Gerador_de_provas\\Gabaritos', Prova), 'w')
+    # Escreve o cabeçalho do prova.
+    ProvaAluno.write('Nome: ' + '\n' + '\n')
+    ProvaAluno.write('Data: ' + '\n' + '\n')
+    ProvaAluno.write('Periodo: ' + '\n' + '\n')
+    ProvaAluno.write('Quiz sobre as Capitais do Brasil - Prova %s' %NumProva + '\n' + '\n')
+
+    # Embaralha os Estados.
+    Estados = list(capitals.keys())
+    random.shuffle(Estados)
+    for PerguntaNum in range(27):
+    # Para cada Estado faz as alternativas.
+    
+        # para a capital em questão seleciona a resposta correta
+        RespostasCorretas = capitals[Estados[PerguntaNum]]
+
+        # cria uma lista com todas as respostas possíveis
+        RespostasErradas = list(capitals.values())
+
+        # remove a resposta correta da lista de respostas erradas
+        del RespostasErradas[RespostasErradas.index(RespostasCorretas)]
+
+        # seleciona 3 respostas erradas para ser alternativas do quiz
+        RespostasErradas = random.sample(RespostasErradas, 3)
+        
+        # junta a resposta correta com as respostas erradas para formar as possiveis respostas
+        RespostasOpcoes = RespostasErradas + [RespostasCorretas]
+
+        # embaralha todas as respostas ( a correta está inclusa)
+        random.shuffle(RespostasOpcoes)
+        # Escreve a resposta e as alterativas embaralhadas no arquivo do quiz.
+        ProvaAluno.write('%s. Qual e a Capital de %s?' % (PerguntaNum + 1, Estados[PerguntaNum]))
+        ProvaAluno.write('\n')
+        for Alternativas in range(4):
+            ProvaAluno.write('   %s. %s\n' % ('ABCD'[Alternativas], RespostasOpcoes[Alternativas]))
+        ProvaAluno.write('\n')
+
+        # Escreve o gabarito da questão.
+        GabaritoProva.write('%s. %s\n' % (PerguntaNum + 1, 'ABCD'[RespostasOpcoes.index(RespostasCorretas)]))
+
+        # Fecha os arquivos
+GabaritoProva.close()
+ProvaAluno.close()
+
+        # Mensagem de conclusão
+print('Provas geradas com sucesso!')
